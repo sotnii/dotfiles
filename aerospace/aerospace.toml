@@ -1,0 +1,232 @@
+# AEROSPACE CONFIG
+#https://github.com/edunfelt/base16-rose-pine-scheme/blob/main/assets/palette.png
+start-at-login = true
+
+after-login-command = []
+
+after-startup-command = [
+     'exec-and-forget /opt/homebrew/opt/borders/bin/borders active_color=0xFFFFBE69 inactive_color=0xFF007692 width=8.0'
+#     'exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar'
+]
+
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_changed FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
+on-focused-monitor-changed = [
+  'move-mouse monitor-lazy-center'
+]
+
+on-focus-changed = [
+  'move-mouse window-lazy-center',
+  'exec-and-forget /bin/bash -c /opt/homebrew/bin/sketchybar --trigger front_app_switched',
+  'exec-and-forget sketchybar --trigger update_windows'
+]
+
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+accordion-padding = 30
+
+default-root-container-layout = 'tiles'
+
+default-root-container-orientation = 'auto'
+
+key-mapping.preset = 'qwerty'
+
+[gaps]
+#outer.bottom numbers have to match presentation.sh variables. built-in retina display is excluded from presentation mode, so this only works on external monitors.
+outer.bottom =        [{monitor.'^built-in retina display$' = 20 }, 40]
+outer.top =        [{monitor.'^built-in retina display$' = 10 }, 60]
+outer.left =       20
+outer.right =      20
+inner.horizontal = 20
+inner.vertical =   20
+
+[exec]                   # Again, you don't need to copy all config sections to your config.
+inherit-env-vars = true  # If you don't touch "exec" section,
+[exec.env-vars]          # it will fallback to "default-config.toml"
+PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
+
+[mode.main.binding]
+alt-space = 'layout floating tiling'
+alt-r = [
+  'mode resize',
+  'exec-and-forget sketchybar --trigger send_message MESSAGE="RESIZE MODE" HOLD="true"'
+]
+
+alt-keypadMinus = 'resize smart -70'
+alt-keypadPlus = 'resize smart +70'
+
+alt-shift-g = [
+   'mode join',
+   'exec-and-forget sketchybar --trigger send_message MESSAGE="JOIN MODE" HOLD="true"'
+]
+
+alt-q = [
+  'close --quit-if-last-window'
+]
+alt-w = []
+
+# All possible keys:
+# - Letters.        a, b, c, ..., z
+# - Numbers.        0, 1, 2, ..., 9
+# - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
+# - F-keys.         f1, f2, ..., f20
+# - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick,
+#                   leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
+# - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
+#                   keypadMinus, keypadMultiply, keypadPlus
+# - Arrows.         left, down, up, right
+
+# All possible modifiers: cmd, alt, ctrl, shift
+
+alt-enter = 'exec-and-forget open -n /Volumes/Macintosh\ HD/Applications/WezTerm.app'
+
+alt-shift-f = 'fullscreen'
+
+alt-g = 'split horizontal'
+alt-v = 'split vertical'
+
+alt-h = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop left'
+alt-j = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop down'
+alt-k = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop up'
+alt-l = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop right'
+alt-left = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop left'
+alt-down = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop down'
+alt-up = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop up'
+alt-right = 'focus --boundaries all-monitors-outer-frame --boundaries-action stop right'
+
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+alt-shift-left = 'move left'
+alt-shift-down = 'move down'
+alt-shift-up = 'move up'
+alt-shift-right = 'move right'
+
+#alt-1 = 'summon-workspace 1'  # Notes
+alt-1 = 'workspace --auto-back-and-forth 1'  # Browser
+alt-2 = 'workspace --auto-back-and-forth 2'  # Code
+alt-3 = 'workspace --auto-back-and-forth 3'  # Terminal
+alt-4 = 'workspace --auto-back-and-forth 4'  # Meeting
+alt-9 = 'workspace --auto-back-and-forth 5'  # Chat
+alt-0 = 'workspace --auto-back-and-forth 6'  # Music
+
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-0 = 'move-node-to-workspace 6'
+
+alt-tab = 'workspace-back-and-forth'
+alt-p = 'move-workspace-to-monitor --wrap-around next'
+#alt-shift-p = [
+#  'move-node-to-monitor --wrap-around next',
+#  'focus-monitor next --wrap-around' 
+#]
+
+alt-shift-s = [
+  'mode service',
+  'exec-and-forget sketchybar --trigger send_message MESSAGE="SERVICE MODE" HOLD="true"'
+]
+
+[mode.service.binding]
+esc = [
+ 'reload-config',
+ 'exec-and-forget sketchybar --trigger hide_message',
+ 'exec-and-forget sketchybar --reload',
+ 'mode main'
+]
+r = ['flatten-workspace-tree', 'mode main'] # reset layout
+#s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
+
+b = [
+   'exec-and-forget ~/.config/aerospace/presentation.sh on',
+   'exec-and-forget sketchybar --bar height=0',
+   'exec-and-forget sketchybar --trigger hide_message',
+   'mode main'
+]
+shift-b = [
+   'exec-and-forget ~/.config/aerospace/presentation.sh off',
+   'exec-and-forget sketchybar --bar height=36',
+   'exec-and-forget sketchybar --trigger hide_message',
+   'mode main'
+]
+
+backspace = ['close-all-windows-but-current', 'mode main']
+
+[mode.resize.binding]
+keypadMinus = 'resize smart -70'
+keypadPlus = 'resize smart +70'
+h = ['resize width -64']
+j = ['resize height -64']
+k = ['resize height +64']
+l = ['resize width +64']
+esc = [
+  'mode main',
+  'exec-and-forget sketchybar --trigger hide_message'
+]
+enter = [
+  'mode main',
+  'exec-and-forget sketchybar --trigger hide_message'
+]
+
+[mode.join.binding]
+h = ['join-with left', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
+j = ['join-with down', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
+k = ['join-with up', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
+l = ['join-with right', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
+alt-h = ['join-with left', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
+esc = [
+  'mode main',
+  'exec-and-forget sketchybar --trigger hide_message'
+]
+enter = [
+  'mode main',
+  'exec-and-forget sketchybar --trigger hide_message'
+]
+
+# === Auto-assigns ===
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+run = ['layout tiling', 'move-node-to-workspace 1']
+
+# Code related stuff
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.goland'
+run = ['layout tiling', 'move-node-to-workspace 2']
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = ['layout tiling', 'move-node-to-workspace 2']
+
+# Terminal
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = ['layout tiling', 'move-node-to-workspace 3']
+
+# Meetings
+[[on-window-detected]]
+if.app-id = 'ru.mts-link.desktop'
+run = ['layout tiling', 'move-node-to-workspace 4']
+
+# Chat
+[[on-window-detected]]
+if.app-id = 'ru.keepcoder.Telegram'
+run = ['layout tiling', 'move-node-to-workspace 5']
+[[on-window-detected]]
+if.app-id = 'chat.rocket'
+run = ['layout tiling', 'move-node-to-workspace 5']
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = ['layout tiling', 'move-node-to-workspace 5']
+
+# Music
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'              
+run = ['move-node-to-workspace 6']  
