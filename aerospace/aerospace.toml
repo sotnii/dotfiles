@@ -4,25 +4,17 @@ start-at-login = true
 
 after-login-command = []
 
-after-startup-command = [
-     'exec-and-forget /opt/homebrew/opt/borders/bin/borders active_color=0xFFFFBE69 inactive_color=0xFF007692 width=8.0'
-#     'exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar'
-]
-
-exec-on-workspace-change = [
-  '/bin/bash',
-  '-c',
-  'sketchybar --trigger aerospace_workspace_changed FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
-]
-
 on-focused-monitor-changed = [
   'move-mouse monitor-lazy-center'
 ]
 
 on-focus-changed = [
-  'move-mouse window-lazy-center',
-  'exec-and-forget /bin/bash -c /opt/homebrew/bin/sketchybar --trigger front_app_switched',
-  'exec-and-forget sketchybar --trigger update_windows'
+  "exec-and-forget curl http://localhost:7776/aerospace/spaces/refresh",
+]
+exec-on-workspace-change = [
+  '/bin/zsh',
+  '-c',
+  'curl "http://localhost:7776/aerospace/spaces/refresh?space=$AEROSPACE_FOCUSED_WORKSPACE"',
 ]
 
 enable-normalization-flatten-containers = false
@@ -38,12 +30,12 @@ key-mapping.preset = 'qwerty'
 
 [gaps]
 #outer.bottom numbers have to match presentation.sh variables. built-in retina display is excluded from presentation mode, so this only works on external monitors.
-outer.bottom =        [{monitor.'^built-in retina display$' = 20 }, 40]
-outer.top =        [{monitor.'^built-in retina display$' = 10 }, 60]
-outer.left =       20
-outer.right =      20
+outer.bottom =        40
+outer.top =       20 
+outer.left =       [{monitor.'built-in' = 20 }, 200]
+outer.right =       [{monitor.'built-in' = 20 }, 200]
 inner.horizontal = 20
-inner.vertical =   20
+inner.vertical  = 20
 
 [exec]                   # Again, you don't need to copy all config sections to your config.
 inherit-env-vars = true  # If you don't touch "exec" section,
@@ -54,7 +46,6 @@ PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 alt-space = 'layout floating tiling'
 alt-r = [
   'mode resize',
-  'exec-and-forget sketchybar --trigger send_message MESSAGE="RESIZE MODE" HOLD="true"'
 ]
 
 alt-keypadMinus = 'resize smart -70'
@@ -62,7 +53,6 @@ alt-keypadPlus = 'resize smart +70'
 
 alt-shift-g = [
    'mode join',
-   'exec-and-forget sketchybar --trigger send_message MESSAGE="JOIN MODE" HOLD="true"'
 ]
 
 alt-q = [
@@ -113,18 +103,20 @@ alt-1 = 'workspace --auto-back-and-forth 1'  # Browser
 alt-2 = 'workspace --auto-back-and-forth 2'  # Code
 alt-3 = 'workspace --auto-back-and-forth 3'  # Terminal
 alt-4 = 'workspace --auto-back-and-forth 4'  # Meeting
-alt-9 = 'workspace --auto-back-and-forth 5'  # Chat
-alt-0 = 'workspace --auto-back-and-forth 6'  # Music
+alt-5 = 'workspace --auto-back-and-forth 5'  # Music (Logic, Ableton)
+alt-9 = 'workspace --auto-back-and-forth 6'  # Chat
+alt-0 = 'workspace --auto-back-and-forth 7'  # Spotify
 
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-0 = 'move-node-to-workspace 6'
+alt-shift-1 = 'move-node-to-workspace 1 --focus-follows-window'
+alt-shift-2 = 'move-node-to-workspace 2 --focus-follows-window'
+alt-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
+alt-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
+alt-shift-5 = 'move-node-to-workspace 5 --focus-follows-window'
+alt-shift-9 = 'move-node-to-workspace 6 --focus-follows-window'
+alt-shift-0 = 'move-node-to-workspace 7 --focus-follows-window'
 
-alt-tab = 'workspace-back-and-forth'
-alt-p = 'move-workspace-to-monitor --wrap-around next'
+#alt-tab = 'workspace-back-and-forth'
+alt-m = 'move-workspace-to-monitor --wrap-around next'
 #alt-shift-p = [
 #  'move-node-to-monitor --wrap-around next',
 #  'focus-monitor next --wrap-around' 
@@ -132,14 +124,11 @@ alt-p = 'move-workspace-to-monitor --wrap-around next'
 
 alt-shift-s = [
   'mode service',
-  'exec-and-forget sketchybar --trigger send_message MESSAGE="SERVICE MODE" HOLD="true"'
 ]
 
 [mode.service.binding]
 esc = [
  'reload-config',
- 'exec-and-forget sketchybar --trigger hide_message',
- 'exec-and-forget sketchybar --reload',
  'mode main'
 ]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
@@ -147,14 +136,10 @@ r = ['flatten-workspace-tree', 'mode main'] # reset layout
 
 b = [
    'exec-and-forget ~/.config/aerospace/presentation.sh on',
-   'exec-and-forget sketchybar --bar height=0',
-   'exec-and-forget sketchybar --trigger hide_message',
    'mode main'
 ]
 shift-b = [
    'exec-and-forget ~/.config/aerospace/presentation.sh off',
-   'exec-and-forget sketchybar --bar height=36',
-   'exec-and-forget sketchybar --trigger hide_message',
    'mode main'
 ]
 
@@ -169,26 +154,22 @@ k = ['resize height +64']
 l = ['resize width +64']
 esc = [
   'mode main',
-  'exec-and-forget sketchybar --trigger hide_message'
 ]
 enter = [
   'mode main',
-  'exec-and-forget sketchybar --trigger hide_message'
 ]
 
 [mode.join.binding]
-h = ['join-with left', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
-j = ['join-with down', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
-k = ['join-with up', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
-l = ['join-with right', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
-alt-h = ['join-with left', 'mode main', 'exec-and-forget sketchybar --trigger hide_message']
+h = ['join-with left', 'mode main',]
+j = ['join-with down', 'mode main',]
+k = ['join-with up', 'mode main',]
+l = ['join-with right', 'mode main',]
+alt-h = ['join-with left', 'mode main',]
 esc = [
   'mode main',
-  'exec-and-forget sketchybar --trigger hide_message'
 ]
 enter = [
   'mode main',
-  'exec-and-forget sketchybar --trigger hide_message'
 ]
 
 # === Auto-assigns ===
@@ -204,6 +185,9 @@ run = ['layout tiling', 'move-node-to-workspace 2']
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
 run = ['layout tiling', 'move-node-to-workspace 2']
+[[on-window-detected]]
+if.app-id = 'dev.zed.Zed'
+run = ['layout tiling', 'move-node-to-workspace 2']
 
 # Terminal
 [[on-window-detected]]
@@ -217,16 +201,21 @@ run = ['layout tiling', 'move-node-to-workspace 4']
 
 # Chat
 [[on-window-detected]]
-if.app-id = 'ru.keepcoder.Telegram'
+if.app-id = 'com.apple.logic10'
 run = ['layout tiling', 'move-node-to-workspace 5']
+
+# Chat
+[[on-window-detected]]
+if.app-id = 'ru.keepcoder.Telegram'
+run = ['layout tiling', 'move-node-to-workspace 6']
 [[on-window-detected]]
 if.app-id = 'chat.rocket'
-run = ['layout tiling', 'move-node-to-workspace 5']
+run = ['layout tiling', 'move-node-to-workspace 6']
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
-run = ['layout tiling', 'move-node-to-workspace 5']
+run = ['layout tiling', 'move-node-to-workspace 6']
 
 # Music
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'              
-run = ['move-node-to-workspace 6']  
+run = ['move-node-to-workspace 7']  
