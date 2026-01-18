@@ -4,6 +4,10 @@ start-at-login = true
 
 after-login-command = []
 
+after-startup-command = [
+  'exec-and-forget cd ~/code/simple-bar-server && npm run start'
+]
+
 on-focused-monitor-changed = [
   'move-mouse monitor-lazy-center'
 ]
